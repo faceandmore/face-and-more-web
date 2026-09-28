@@ -1,3 +1,25 @@
 /anwendungen        /leistungen         308
 /face-and-more      /kontakt            308
 /services-produkte  /produkte           308
+
+# Former Wix URLs identified in Search Console; map each page to its closest replacement.
+/services-jugendliche /hautcoaching/jugendliche-haut 301
+/asap-produkte /produkte 301
+/akne-behandlung /leistungen/akne 301
+/blog/categories/kosmetik-allgemein /blog 301
+/michaela /ueber-mich 301
+/problemhaut-unreine-haut /leistungen/problemhaut 301
+/gesichtsbehandlungen /leistungen/gesichtsbehandlung 301
+/post/warum-ist-ein-fruchtsäurepeeling-im-frühjahr-nicht-tabu /blog/fruchtsaeure-peeling-fruehjahr 301
+/post/warum-ist-ein-fruchts%C3%A4urepeeling-im-fr%C3%BChjahr-nicht-tabu /blog/fruchtsaeure-peeling-fruehjahr 301
+/post/gesichtsbehandlungen-bei-faceandmore /blog/asap-skincare-face-and-more 301
+/microblading-augenbrauen /leistungen/microblading 301
+/post/warum-ist-fruchtsäure-in-der-kosmetik-nicht-wegzudenken /blog/fruchtsaeure-moderne-kosmetik 301
+/post/warum-ist-fruchts%C3%A4ure-in-der-kosmetik-nicht-wegzudenken /blog/fruchtsaeure-moderne-kosmetik 301
+/post/warum-produkte-mit-aha-fruchtsäure-nach-der-behandlung-verwenden /blog/aha-fruchtsaeure-nach-behandlung 301
+/post/warum-produkte-mit-aha-fruchts%C3%A4ure-nach-der-behandlung-verwenden /blog/aha-fruchtsaeure-nach-behandlung 301
+/kosmetikprodukte /produkte 301
+/services-reife-haut /hautcoaching/reife-haut 301
+/fruchtsäure /leistungen/fruchtsaeure 301
+/fruchts%C3%A4ure /leistungen/fruchtsaeure 301
+/microneedling-dermaroller /leistungen/microneedling 301
