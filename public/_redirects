@@ -4,6 +4,7 @@
 
 # Former Wix URLs identified in Search Console; map each page to its closest replacement.
 /services-jugendliche /hautcoaching/jugendliche-haut 301
+/services-1 /leistungen 301
 /asap-produkte /produkte 301
 /akne-behandlung /leistungen/akne 301
 /blog/categories/kosmetik-allgemein /blog 301
