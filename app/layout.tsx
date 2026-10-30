@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { cormorantGaramond, inter } from './fonts'
 
 export const metadata: Metadata = {
   title: {
@@ -92,7 +93,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="de">
+    <html lang="de" className={`${inter.variable} ${cormorantGaramond.variable}`}>
       <body>
         <script
           type="application/ld+json"
