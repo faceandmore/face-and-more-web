@@ -2,7 +2,8 @@
 // - Security-Header stehen jetzt in public/_headers (next.config-headers() greifen bei
 //   output: "export" nicht mehr) — CSP, HSTS etc. wurden 1:1 aus dem bisherigen next.config
 //   uebernommen, nicht verschaerft. Externe Ressourcen (Stand Security-Review 2026-07-11):
-//   Google Fonts (fonts.googleapis.com/fonts.gstatic.com, next/font wird nicht genutzt),
+//   Schriften werden per next/font/google (app/fonts.ts) beim Build geladen und selbst gehostet,
+//   daher keine Font-Hosts mehr in der CSP,
 //   Google-Maps-Embed-iframe im SiteFooter (www.google.com), Notion als Headless-CMS liefert
 //   Cover-/Angebotsbilder mit wechselnden Hosts -> img-src bleibt pauschal https:.
 // - Redirects stehen jetzt in public/_redirects (next.config-redirects() greifen bei
