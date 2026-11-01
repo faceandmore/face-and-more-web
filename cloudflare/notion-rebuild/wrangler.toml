@@ -1,0 +1,11 @@
+name = "faceandmore-notion-rebuild"
+main = "src/index.js"
+
+# ACHTUNG: Die Werte unten stammen NICHT aus dem veroeffentlichten Worker (Cloudflare-Dashboard),
+# sondern sind fuer lokale Tests gesetzt. Vor jedem Deploy mit dem Dashboard abgleichen
+# (Settings -> Runtime -> Compatibility date, Settings -> Domains & Routes), damit ein
+# Deploy aus dem Repo weder das Laufzeitverhalten noch die Erreichbarkeit aendert.
+compatibility_date = "2026-01-01"
+
+# Secrets (NOTION_VERIFICATION_TOKEN, DEPLOY_HOOK_URL) stehen NICHT hier, sondern nur als
+# Worker-Secrets im Dashboard bzw. lokal in .dev.vars (nicht eingecheckt).

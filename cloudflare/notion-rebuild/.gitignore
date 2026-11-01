@@ -1,0 +1,5 @@
+# Lokale Test-Secrets und wrangler-Arbeitsverzeichnis, niemals einchecken
+.dev.vars
+.dev.vars.*
+.wrangler/
+node_modules/
