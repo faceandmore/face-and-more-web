@@ -84,11 +84,6 @@ const noSecrets = (logs) => {
   assert.ok(!all.includes(HOOK_URL), 'Deploy-Hook-URL darf nicht im Log stehen')
 }
 
-const makeCtx = () => {
-  const promises = []
-  return { promises, waitUntil: (p) => { promises.push(p) } }
-}
-
 // ---------------------------------------------------------------- GET / Methoden
 
 kompatibel('GET liefert die Statusmeldung und loest keinen Deploy aus', async () => {
@@ -360,10 +355,7 @@ neu('Replay-Pruefung kommt NACH der Signaturpruefung (unsignierte alte Events: 4
 
 neu('scheduled() ruft den Deploy-Hook genau einmal per POST auf und loggt Erfolg ohne URL', async () => {
   await withMocks(200, async ({ calls, logs }) => {
-    const ctx = makeCtx()
-    await worker.scheduled({ cron: '0 */6 * * *', scheduledTime: Date.now() }, { DEPLOY_HOOK_URL: HOOK_URL }, ctx)
-    assert.equal(ctx.promises.length, 1, 'Arbeit laeuft ueber ctx.waitUntil')
-    await ctx.promises[0]
+    await worker.scheduled({ cron: '0 */6 * * *', scheduledTime: Date.now() }, { DEPLOY_HOOK_URL: HOOK_URL })
     assert.equal(calls.length, 1)
     assert.equal(calls[0].url, HOOK_URL)
     assert.equal(calls[0].init.method, 'POST')
@@ -375,9 +367,7 @@ neu('scheduled() ruft den Deploy-Hook genau einmal per POST auf und loggt Erfolg
 
 neu('scheduled() braucht NOTION_VERIFICATION_TOKEN nicht', async () => {
   await withMocks(200, async ({ calls }) => {
-    const ctx = makeCtx()
-    await worker.scheduled({ cron: '0 */6 * * *' }, { DEPLOY_HOOK_URL: HOOK_URL }, ctx)
-    await ctx.promises[0]
+    await worker.scheduled({ cron: '0 */6 * * *' }, { DEPLOY_HOOK_URL: HOOK_URL })
     assert.equal(calls.length, 1)
   })
 })
@@ -385,9 +375,10 @@ neu('scheduled() braucht NOTION_VERIFICATION_TOKEN nicht', async () => {
 for (const status of [400, 404, 500, 503]) {
   neu(`scheduled(): Hook-HTTP-${status} schlaegt fehl (Lauf als Fehler sichtbar) und wird protokolliert`, async () => {
     await withMocks(status, async ({ logs }) => {
-      const ctx = makeCtx()
-      await worker.scheduled({ cron: '0 */6 * * *' }, { DEPLOY_HOOK_URL: HOOK_URL }, ctx)
-      await assert.rejects(ctx.promises[0], new RegExp(String(status)))
+      await assert.rejects(
+        worker.scheduled({ cron: '0 */6 * * *' }, { DEPLOY_HOOK_URL: HOOK_URL }),
+        new RegExp(String(status))
+      )
       assert.ok(logs.some((l) => l.includes(String(status))))
       noSecrets(logs)
     })
@@ -396,9 +387,7 @@ for (const status of [400, 404, 500, 503]) {
 
 neu('scheduled(): Netzwerkfehler schlaegt fehl, Log und Fehlermeldung ohne URL', async () => {
   await withMocks('network', async ({ logs }) => {
-    const ctx = makeCtx()
-    await worker.scheduled({ cron: '0 */6 * * *' }, { DEPLOY_HOOK_URL: HOOK_URL }, ctx)
-    await assert.rejects(ctx.promises[0], (err) => {
+    await assert.rejects(worker.scheduled({ cron: '0 */6 * * *' }, { DEPLOY_HOOK_URL: HOOK_URL }), (err) => {
       assert.ok(!String(err.message).includes('SECRETPATH'))
       assert.ok(!String(err.stack).includes('SECRETPATH'))
       return true
@@ -409,9 +398,7 @@ neu('scheduled(): Netzwerkfehler schlaegt fehl, Log und Fehlermeldung ohne URL',
 
 neu('scheduled(): fehlende DEPLOY_HOOK_URL schlaegt fehl, kein fetch', async () => {
   await withMocks(200, async ({ calls, logs }) => {
-    const ctx = makeCtx()
-    await worker.scheduled({ cron: '0 */6 * * *' }, {}, ctx)
-    await assert.rejects(ctx.promises[0], /nicht konfiguriert|not configured/i)
+    await assert.rejects(worker.scheduled({ cron: '0 */6 * * *' }, {}), /nicht konfiguriert|not configured/i)
     assert.equal(calls.length, 0)
     assert.ok(logs.length >= 1)
   })
@@ -419,9 +406,7 @@ neu('scheduled(): fehlende DEPLOY_HOOK_URL schlaegt fehl, kein fetch', async () 
 
 neu('scheduled(): haengender Hook endet nach Timeout mit Fehler', { timeout: 5000 }, async () => {
   await withMocks('hang', async ({ logs }) => {
-    const ctx = makeCtx()
-    await worker.scheduled({ cron: '0 */6 * * *' }, { DEPLOY_HOOK_URL: HOOK_URL, DEPLOY_HOOK_TIMEOUT_MS: '50' }, ctx)
-    await assert.rejects(ctx.promises[0])
+    await assert.rejects(worker.scheduled({ cron: '0 */6 * * *' }, { DEPLOY_HOOK_URL: HOOK_URL, DEPLOY_HOOK_TIMEOUT_MS: '50' }))
     noSecrets(logs)
   })
 })
