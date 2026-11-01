@@ -1,0 +1,10 @@
+{
+  "name": "faceandmore-notion-rebuild",
+  "private": true,
+  "type": "module",
+  "description": "Cloudflare Worker: loest nach signierten Notion-Webhooks (und per Cron) den Pages-Deploy-Hook aus.",
+  "scripts": {
+    "test": "node --test test/worker.test.mjs",
+    "test:integration": "node test/integration.mjs"
+  }
+}
