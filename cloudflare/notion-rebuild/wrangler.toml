@@ -1,14 +1,25 @@
 name = "faceandmore-notion-rebuild"
 main = "src/index.js"
 
-# ACHTUNG: Die Werte unten stammen NICHT aus dem veroeffentlichten Worker (Cloudflare-Dashboard),
-# sondern sind fuer lokale Tests gesetzt. Vor jedem Deploy mit dem Dashboard abgleichen
-# (Settings -> Runtime -> Compatibility date, Settings -> Domains & Routes), damit ein
-# Deploy aus dem Repo weder das Laufzeitverhalten noch die Erreichbarkeit aendert.
-compatibility_date = "2026-01-01"
+# Abgeglichen mit dem bestehenden Worker im Cloudflare-Dashboard (Konto "Face & More", geprueft am 2026-11-01):
+# Compatibility Date 2026-10-06, keine Compatibility Flags, Placement Default, Cache aus.
+compatibility_date = "2026-10-06"
+
+# Erreichbarkeit: Der Notion-Webhook zeigt auf faceandmore-notion-rebuild.michaela-a35.workers.dev.
+# Diese Adresse MUSS erhalten bleiben. Es gibt keine eigene Domain und keine Route.
+# Preview-URLs (workers.dev) sind im Dashboard deaktiviert.
+workers_dev = true
+preview_urls = false
 
 # Secrets (NOTION_VERIFICATION_TOKEN, DEPLOY_HOOK_URL) stehen NICHT hier, sondern nur als
-# Worker-Secrets im Dashboard bzw. lokal in .dev.vars (nicht eingecheckt).
+# Worker-Secrets im Dashboard bzw. lokal in .dev.vars (nicht eingecheckt). Ein Deploy aendert sie nicht.
+# Das Dashboard enthaelt sonst keine Variablen; sollte jemand dort spaeter welche anlegen, wuerde
+# ein Deploy sie entfernen. Deshalb:
+keep_vars = true
+
+# Workers Logs sind im Dashboard aktiviert; hier explizit, damit ein Deploy sie nicht ausschaltet.
+[observability]
+enabled = true
 
 # Cron-Trigger: alle 6 Stunden (00:00, 06:00, 12:00, 18:00 UTC) den Deploy-Hook aufrufen.
 # ABSICHTLICH AUSKOMMENTIERT, damit nichts aktiv wird, bevor der geaenderte Worker deployt und

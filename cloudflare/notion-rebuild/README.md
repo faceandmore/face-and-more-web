@@ -92,12 +92,24 @@ npm run test:integration    # echte Laufzeit via wrangler dev, Mock-Hook auf 127
 Die Tests mit `[kompatibel]` im Namen halten das Verhalten des zuerst veroeffentlichten Workers fest
 und laufen auch gegen dessen Code (`WORKER_PATH=<alte Datei> npm test`).
 
-## Vor dem Deploy abgleichen (nicht aus dem Dashboard uebernommen)
+## Abgleich mit dem bestehenden Worker (Stand 2026-11-01, aus dem Dashboard bestaetigt)
 
-* **Compatibility Date** in `wrangler.toml` mit dem Dashboard abgleichen (Settings, Runtime).
-* **workers.dev / Routen:** `wrangler deploy` kann die im Dashboard eingestellte Erreichbarkeit
-  veraendern. Vorher `workers_dev` und `routes` in `wrangler.toml` passend zum Dashboard setzen.
-* **Bestehende Secrets** bleiben bei `wrangler deploy` erhalten; keine neuen setzen noetig.
+| Dashboard | `wrangler.toml` |
+|---|---|
+| Compatibility Date `2026-10-06`, keine Flags | `compatibility_date = "2026-10-06"` |
+| workers.dev aktiv (`faceandmore-notion-rebuild.michaela-a35.workers.dev`), Preview-URLs aus | `workers_dev = true`, `preview_urls = false` |
+| keine eigene Domain, keine Route | keine `routes` |
+| Workers Logs aktiv | `[observability] enabled = true` |
+| Placement Default, Cache aus | nicht gesetzt (Standard) |
+| Secrets `DEPLOY_HOOK_URL`, `NOTION_VERIFICATION_TOKEN`, keine Variablen | nicht im Repo; `keep_vars = true` |
+
+Pruefung ohne Deploy: `npx wrangler@4 deploy --dry-run` (kein Login, keine Verbindung zum Konto).
+
+## Vor dem Deploy
+
+* Der Worker-Name bestimmt die Adresse; er darf nicht geaendert werden, sonst entsteht ein neuer Worker.
+* `wrangler deploy` ersetzt den Code und die oben genannten Einstellungen, **nicht** die Secrets.
+* Das Deploy muss im Konto "Face & More" laufen (`npx wrangler whoami`; Account-ID `a3571b81...`).
 
 ## Cron aktivieren (noch NICHT getan)
 
