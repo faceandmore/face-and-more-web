@@ -4,6 +4,9 @@ import { fetchBlogPosts } from "@/../../lib/notion"
 
 const BASE_URL = 'https://faceandmore.at'
 
+// Ab Next 16 Pflicht für Metadaten-Routen bei `output: "export"`.
+export const dynamic = 'force-static'
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Statischer Export: dieselbe Zusammenfuehrung aus fest hinterlegten und Notion-Artikeln
   // wie in generateStaticParams (app/blog/[slug]/page.tsx), damit jeder exportierte

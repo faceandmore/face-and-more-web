@@ -22,14 +22,15 @@ const fallbackPosts = articles.map((a) => ({
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }): Promise<Metadata> {
+  const { slug } = await params
   // fetchBlogPostBySlug faengt selbst nur den erwarteten Fall ab (Slug ist keine echte
   // Notion-Seite -> null); ein echter Notion-Fehler soll hier den Build stoppen.
-  let post: (typeof fallbackPosts)[0] | null = await fetchBlogPostBySlug(params.slug)
+  let post: (typeof fallbackPosts)[0] | null = await fetchBlogPostBySlug(slug)
 
   if (!post) {
-    const article = articles.find((a) => a.slug === params.slug)
+    const article = articles.find((a) => a.slug === slug)
     if (article) {
       post = {
         id: article.slug,
@@ -84,12 +85,13 @@ export async function generateStaticParams() {
 export default async function BlogPostPage({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }) {
+  const { slug } = await params
   // Wie in generateMetadata/generateStaticParams: ein echter Notion-Fehlschlag stoppt hier
   // bewusst den Build, statt eine Seite ohne die erwarteten Inhalte auszuliefern.
   let [post, notionAll] = await Promise.all([
-    fetchBlogPostBySlug(params.slug),
+    fetchBlogPostBySlug(slug),
     fetchBlogPosts(),
   ])
   let allPosts: typeof fallbackPosts = [...fallbackPosts]
@@ -99,7 +101,7 @@ export default async function BlogPostPage({
 
   // Fallback: look up in hardcoded articles
   if (!post) {
-    const article = articles.find((a) => a.slug === params.slug)
+    const article = articles.find((a) => a.slug === slug)
     if (article) {
       post = {
         id: article.slug,
@@ -118,7 +120,7 @@ export default async function BlogPostPage({
 
   if (!post) notFound()
 
-  const currentIndex = allPosts.findIndex((p) => p.slug === params.slug)
+  const currentIndex = allPosts.findIndex((p) => p.slug === slug)
   const prev = currentIndex > 0 ? allPosts[currentIndex - 1] : null
   const next = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null
 

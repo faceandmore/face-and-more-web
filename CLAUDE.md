@@ -131,7 +131,7 @@ In `next.config.js` bzw. `next.config.ts` per `headers()` setzen:
 
 Nach jedem Deploy: Ergebnis mit securityheaders.com gegenchecken (Ziel: mind. Note A).
 
-Umsetzung in diesem Repo: `next.config.mjs`. Diese Website bindet extern nur ein: Google Fonts (CSS-Import in `app/globals.css`, lädt von `fonts.googleapis.com` + `fonts.gstatic.com`, next/font wird nicht genutzt), ein Google-Maps-Embed-iframe im Footer (`src/components/SiteFooter.tsx`, `www.google.com`) sowie Cover-/Angebotsbilder aus Notion (`lib/notion.ts`, wechselnde https-Hosts — daher `img-src` pauschal `https:`). WhatsApp- (`wa.me`) und Treatwell-Buchungslinks (`trea.tw`) sind reine `<a target="_blank">`-Links, keine Embeds, daher nicht in der CSP. Kein Analytics/GTM/Pixel im Einsatz.
+Umsetzung in diesem Repo: `next.config.mjs`. Diese Website bindet extern nur ein: ein Google-Maps-Embed-iframe im Footer (`src/components/SiteFooter.tsx`, `www.google.com`) sowie Cover-/Angebotsbilder aus Notion (`lib/notion.ts`, wechselnde https-Hosts — daher `img-src` pauschal `https:`). WhatsApp- (`wa.me`) und Treatwell-Buchungslinks (`trea.tw`) sind reine `<a target="_blank">`-Links, keine Embeds, daher nicht in der CSP. Die Schriften (Cormorant Garamond, Inter) werden über `next/font/google` (`app/fonts.ts`) beim Build geladen und selbst gehostet, daher stehen `fonts.googleapis.com`/`fonts.gstatic.com` nicht mehr in der CSP. Kein Analytics/GTM/Pixel im Einsatz.
 
 ## 2. CORS
 

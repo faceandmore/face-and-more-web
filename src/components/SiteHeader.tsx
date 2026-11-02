@@ -3,7 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
-import logo from "@/assets/logotransparent.jpg";
+import logo from "@/assets/logotransparent.webp";
 import { imgSrc } from "@/lib/utils";
 
 interface NavChild {
@@ -110,7 +110,7 @@ const SiteHeader = () => {
     >
       <div className="container-editorial flex items-center justify-between h-24 md:h-32">
         <Link href="/" className="flex items-center" aria-label="FACE AND MORE — Startseite">
-          <img src={imgSrc(logo)} alt="FACE AND MORE by Michaela Kornherr" className="h-24 md:h-28 w-auto" />
+          <img src={imgSrc(logo)} alt="FACE AND MORE by Michaela Kornherr" className="h-24 md:h-28 w-auto" fetchPriority="high" />
         </Link>
 
         {/* Desktop nav */}

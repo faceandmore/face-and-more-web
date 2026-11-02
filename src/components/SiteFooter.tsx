@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Instagram, Facebook, Mail } from "lucide-react";
-import logo from "@/assets/logotransparent.jpg";
-import javeraLogo from "@/assets/Javera.logo.rund.png";
+import logo from "@/assets/logotransparent.webp";
+import javeraLogo from "@/assets/Javera.logo.rund.webp";
 import { imgSrc } from "@/lib/utils";
 
 const SiteFooter = () => (
@@ -9,7 +9,7 @@ const SiteFooter = () => (
     <div className="container-editorial py-10 grid gap-8 md:grid-cols-3">
       <div className="flex flex-col items-center text-center">
         <Link href="/" aria-label="FACE AND MORE — Startseite" className="inline-block">
-          <img src={imgSrc(logo)} alt="FACE AND MORE by Michaela Kornherr" className="h-20 md:h-24 w-auto" />
+          <img src={imgSrc(logo)} alt="FACE AND MORE by Michaela Kornherr" className="h-20 md:h-24 w-auto" width={960} height={540} loading="lazy" />
         </Link>
         <p className="mt-4 max-w-sm text-sm text-muted-foreground leading-relaxed">
           Moderne Hautanalyse, gezielte Behandlungen und persönliche Hautberatung im Herzen Wiens.
@@ -87,7 +87,7 @@ const SiteFooter = () => (
           <span className="text-[9px] tracking-[0.18em] uppercase font-light">
             Webdesign by
           </span>
-          <img src={imgSrc(javeraLogo)} alt="JAVERA STUDIO" className="h-3.5 w-auto" />
+          <img src={imgSrc(javeraLogo)} alt="JAVERA STUDIO" className="h-3.5 w-auto" width={128} height={128} loading="lazy" />
           <span className="text-[9px] tracking-[0.18em] uppercase font-light">
             JAVERA STUDIO
           </span>
