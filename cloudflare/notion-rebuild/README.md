@@ -9,7 +9,7 @@ Zwei Ausloeser:
    HMAC-SHA256-Signatur (`X-Notion-Signature`) und ruft den Deploy-Hook auf.
 2. **Cron** (`scheduled`, alle 6 Stunden): ruft denselben Deploy-Hook auf, damit abgelaufene
    Angebote ("Gültig bis") auch ohne Notion-Aenderung verschwinden.
-   **Aktuell NICHT aktiv**, siehe "Cron aktivieren".
+   Aktiv, siehe "Cron".
 
 Der Deploy-Hook muss auf den Produktionsbranch **`static-export-cloudflare`** zeigen. Zeigt er auf
 einen anderen Branch, entsteht nur ein Preview und die Live-Seite aktualisiert sich nicht.
@@ -19,7 +19,7 @@ einen anderen Branch, entsteht nur ein Preview und die Live-Seite aktualisiert s
 | Datei | Inhalt |
 |---|---|
 | `src/index.js` | Worker. Die Signaturpruefung (`signatureToBytes`, `verifyNotionSignature`) ist Zeichen fuer Zeichen der zuerst veroeffentlichte Code. |
-| `wrangler.toml` | Name, Einstiegspunkt, Compatibility Date, Cron (auskommentiert) |
+| `wrangler.toml` | Name, Einstiegspunkt, Compatibility Date, Cron |
 | `test/worker.test.mjs` | Unit-Tests (`npm test`), Deploy-Hook und `console` simuliert |
 | `test/integration.mjs` | Test in der echten Laufzeit (`npm run test:integration`), Hook = Mock auf 127.0.0.1 |
 
@@ -42,7 +42,7 @@ Secrets stehen nur im Cloudflare-Dashboard (bzw. lokal in `.dev.vars`, gitignore
 
 | Aenderung | Wirkung auf den normalen Betrieb |
 |---|---|
-| `scheduled()` ruft den Hook auf; ein Fehler macht den Cron-Lauf in Cloudflare als fehlgeschlagen sichtbar | neu, Cron ist noch nicht aktiviert |
+| `scheduled()` ruft den Hook auf; ein Fehler macht den Cron-Lauf in Cloudflare als fehlgeschlagen sichtbar | neu; der Cron ist aktiv (siehe "Cron") |
 | Deploy-Hook-Aufruf zentral: Zeitlimit, Fehlerprotokoll ohne URL, bei Fehler HTTP-Status im Log | Antworten bleiben gleich (`200` / `502 ... failed: <Status>`); neu: `502 ... failed: timeout / network error` und `503 Deploy hook is not configured.` statt eines Absturzes |
 | Verification-Token wird nur noch im Einrichtungsmodus geloggt (Secret fehlt oder `NOTION_SETUP_MODE=1`) und von Steuerzeichen bereinigt | Antwort unveraendert (`200 Notion verification received.`) |
 | JSON, das kein Objekt ist (`null`, Zahl, Text, Liste), ergibt `400 Invalid JSON` | vorher Absturz bei `null` |
@@ -111,13 +111,19 @@ Pruefung ohne Deploy: `npx wrangler@4 deploy --dry-run` (kein Login, keine Verbi
 * `wrangler deploy` ersetzt den Code und die oben genannten Einstellungen, **nicht** die Secrets.
 * Das Deploy muss im Konto "Face & More" laufen (`npx wrangler whoami`; Account-ID `a3571b81...`).
 
-## Cron aktivieren (noch NICHT getan)
+## Cron
 
-1. Geaenderten Worker deployen und GET, signierten POST und Hook-Fehlerfall pruefen.
-2. In `wrangler.toml` den Block `[triggers] crons = ["0 */6 * * *"]` einkommentieren und erneut
-   deployen (`0 */6 * * *` = 00:00, 06:00, 12:00, 18:00 UTC; Cloudflare-Cron kennt keine Zeitzonen).
-3. Nach dem ersten Lauf im Dashboard (Worker, Triggers bzw. Logs) pruefen, dass er erfolgreich war
-   und ein Pages-Build entstanden ist.
+Der Cron `0 */6 * * *` (00:00, 06:00, 12:00, 18:00 UTC; Cloudflare-Cron kennt keine Zeitzonen) ist in
+`wrangler.toml` festgeschrieben und im Cloudflare-Dashboard eingetragen (seit 2026-11-01). Ohne den
+Block in der Datei wuerde Wrangler beim Deploy zwar nichts entfernen, die Konfiguration waere aber
+unvollstaendig.
+
+Pruefen: Dashboard, Worker `faceandmore-notion-rebuild`, Triggers bzw. Logs. Nach einem Lauf muss ein
+Pages-Build entstanden sein. Ein fehlgeschlagener Hook-Aufruf erscheint dort als fehlgeschlagener Lauf.
+
+Stand 2026-11-02: Das Deploy ist abgeglichen (Account `a3571b81...`). Der Pages-Deploy-Hook fuer
+`static-export-cloudflare` existiert; der Wert von `DEPLOY_HOOK_URL` ist ein Secret und nicht lesbar,
+seine Zuordnung zu diesem Hook laesst sich nur durch einen echten Aufruf beweisen.
 
 ## Token rotieren
 
